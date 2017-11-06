@@ -2873,10 +2873,12 @@ class ForeignKeyConstraint(ColumnCollectionConstraint):
         if len(set(columns)) != len(refcolumns):
             if len(set(columns)) != len(columns):
                 # e.g. FOREIGN KEY (a, a) REFERENCES r (b, c)
-                raise exc.ArgumentError(
-                    "ForeignKeyConstraint with duplicate source column "
-                    "references are not supported."
-                )
+                # raise exc.ArgumentError(
+                #     "ForeignKeyConstraint with duplicate source column "
+                #     "references are not supported."
+                # )
+                columns = tuple(set(columns))
+                refcolumns = tuple(set(refcolumns))
             else:
                 # e.g. FOREIGN KEY (a) REFERENCES r (b, c)
                 # paraphrasing https://www.postgresql.org/docs/9.2/static/\
@@ -4088,4 +4090,3 @@ class _SchemaTranslateMap(object):
 
 _default_schema_map = _SchemaTranslateMap(None)
 _schema_getter = _SchemaTranslateMap._schema_getter
-
